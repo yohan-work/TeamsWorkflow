@@ -4,8 +4,16 @@ const TIMEZONE = "Asia/Seoul";
 const SLACK_WEBHOOK_URL = "";
 const TEAMS_WEBHOOK_URL = "";
 
+// 주말 판단(KST) — ISO 요일: 월=1 … 일=7
+function isWeekendKST() {
+  const isoDow = Number(Utilities.formatDate(new Date(), TIMEZONE, "u"));
+  return isoDow === 6 || isoDow === 7; // 토=6, 일=7
+}
+
 // === 메인 함수 ===
 function postTodayMenu() {
+  if (isWeekendKST()) return;
+
   const today = Utilities.formatDate(new Date(), TIMEZONE, "yyyy-MM-dd");
 
   const sheet = SpreadsheetApp.getActive().getSheetByName(SHEET_NAME);
